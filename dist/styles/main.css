@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    background: #111111;
+}
+
+body {
+    opacity: 0;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    
+}
+
+canvas {
+    display: block;
+    background: #111;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+
+.loader .text__load {
+    letter-spacing: 0px;
+    color: #FFF;
+    font-size: 10em;
+    font-weight: 900;
+    font-family: HK Grotesk;
+}
+
+.loader .text__load .char {
+    display: inline-block;
+}
+
+#main {
+    position: relative;
+}
+
+header {
+    position: fixed;
+    top: 5em;
+    left: 5em;
+    font-family: 'HK Grotesk';
+    font-size: 1rem;
+    color: #CCC;
+    z-index: 1000;
+}
+
+.section {
+    color: #AAA;
+    font-family: HK Grotesk;
+
+}
+
+.section h1 {
+    color: blue;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: .7rem;
+    margin: 5em 0 3em 0;
+
+}
+
+.section h1 span.line {
+    width: 20px;
+    height: .1em;
+    background-color: #FFF;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+    margin-left: 10px;
+}
+
+.scroll__container {
+    position: absolute;
+    top: 10em;
+    left: 5em;
+    height: calc(100% + 2em);
+
+}
+
+p {
+    margin: 10px 0;
+}
+
+.flex__container {
+    display: flex;
+    /* align-items: center; */
+    flex-direction: row;
+}
+
+.flex__container div {
+    width: 300px;
+    height: auto;
+    padding: 1em;
+}
+
+ul li {
+    list-style-type: none;
+    display: block;
+    margin: 19px  0;
+    position: relative;
+}
+
+/* Links */
+a {
+    color: #FFF;
+    text-decoration: none;
+    position: relative;
+    transform-origin: right;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    background-color: #FFF;
+    width: 100%;
+    height: 0.1em;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: all .3s ease;
+}
+
+a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+    right: 0;
+    transition: all .3s ease;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 960px) {
+    .scroll__container {
+        height: 1500px;
+    }
+    .flex__container {
+        flex-direction: column;
+    }
+
+    .flex__container div {
+        width: 100%;
+    }
+    .loader .text__load {
+        font-size: 3em;
+    }
+    body {
+        font-size: .8em;
+    }
+}

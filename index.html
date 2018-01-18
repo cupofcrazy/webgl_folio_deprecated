@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/styles/main.css">
+    <title>Project One</title>
+</head>
+<body>
+    <div id="app">
+		<div class="loader">
+			<div class="text__load">
+				<span class="char">G</span>
+				<span class="char">r</span>
+				<span class="char">o</span>
+				<span class="char">t</span>
+				<span class="char">e</span>
+				<span class="char">s</span>
+				<span class="char">k</span>
+			</div>
+		</div>
+		<div class="container"></div>
+		<div id="main">
+			<header>
+				<div class="logo">Grotesk</div>
+			</header>
+
+			<div class="scroll__container">
+				<div class="wrapper">
+					<div class="section bio">
+						<h1 class="title">Bio<span class="line"></span></h1>
+						<p>Hello.</p>
+						<p>I am a front-end interactive developer</p>
+						<p>from Seattle, Washington</p>
+						<p>with a passion for crafting interactive interfaces and animations</p>
+						<p>with code.</p>
+						<p>Currently working on side projects</p>
+					</div>
+
+
+					<div class="flex__container">
+						<div class="section skills">
+								<h1 class="title">Skills<span class="line"></span></h1>
+								<ul>
+									<li>Javascript</li>
+									<li>Python</li>
+									<li>Blender</li>
+									<li>Illustrator</li>
+									<li>Photoshop</li>
+									<li>Web Design</li>
+								</ul>
+						</div>
+
+						<div class="section skills">
+							<h1 class="title">Social<span class="line"></span></h1>
+							<ul class="links">
+								<li><a href="#">Twitter</a></li>
+								<li><a href="#">Instagram</a></li>
+								<li><a href="#">Mail</a></li>
+								<li><a href="#">Github</a></li>
+								<li><a href="#">Codepen</a></li>
+								<li><a href="#">Facebook</a></li>
+							</ul>
+						</div>
+
+						<div class="section skills">
+							<h1 class="title">Capabilities<span class="line"></span></h1>
+							<ul class="links">
+								<li>Front-End Development</li>
+								<li>Digital Illustration</li>
+								<li>3D Design</li>
+								<li>Web Design</li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+    </div> 
+	
+
+
+	<!-- Render shaders -->
+	<script id="render-vs" type="x-shader/x-vertex">
+	//
+	// GLSL textureless classic 2D noise "cnoise",
+	// with an RSL-style periodic variant "pnoise".
+	// Author:  Stefan Gustavson (stefan.gustavson@liu.se)
+	// Version: 2011-08-22
+	//
+	// Many thanks to Ian McEwan of Ashima Arts for the
+	// ideas for permutation and gradient selection.
+	//
+	// Copyright (c) 2011 Stefan Gustavson. All rights reserved.
+	// Distributed under the MIT license. See LICENSE file.
+	// https://github.com/ashima/webgl-noise
+	//
+
+	vec4 mod289(vec4 x)
+	{
+	  return x - floor(x * (1.0 / 289.0)) * 289.0;
+	}
+
+	vec4 permute(vec4 x)
+	{
+	  return mod289(((x*34.0)+1.0)*x);
+	}
+
+	vec4 taylorInvSqrt(vec4 r)
+	{
+	  return 1.79284291400159 - 0.85373472095314 * r;
+	}
+
+	vec2 fade(vec2 t) {
+	  return t*t*t*(t*(t*6.0-15.0)+10.0);
+	}
+
+	// Classic Perlin noise
+	float cnoise(vec2 P)
+	{
+	  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+	  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+	  Pi = mod289(Pi); // To avoid truncation effects in permutation
+	  vec4 ix = Pi.xzxz;
+	  vec4 iy = Pi.yyww;
+	  vec4 fx = Pf.xzxz;
+	  vec4 fy = Pf.yyww;
+
+	  vec4 i = permute(permute(ix) + iy);
+
+	  vec4 gx = fract(i * (1.0 / 41.0)) * 2.0 - 1.0 ;
+	  vec4 gy = abs(gx) - 0.5 ;
+	  vec4 tx = floor(gx + 0.5);
+	  gx = gx - tx;
+
+	  vec2 g00 = vec2(gx.x,gy.x);
+	  vec2 g10 = vec2(gx.y,gy.y);
+	  vec2 g01 = vec2(gx.z,gy.z);
+	  vec2 g11 = vec2(gx.w,gy.w);
+
+	  vec4 norm = taylorInvSqrt(vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11)));
+	  g00 *= norm.x;
+	  g01 *= norm.y;
+	  g10 *= norm.z;
+	  g11 *= norm.w;
+
+	  float n00 = dot(g00, vec2(fx.x, fy.x));
+	  float n10 = dot(g10, vec2(fx.y, fy.y));
+	  float n01 = dot(g01, vec2(fx.z, fy.z));
+	  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+	  vec2 fade_xy = fade(Pf.xy);
+	  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+	  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+	  return 2.3 * n_xy;
+	}
+
+	float map(float value, float oldMin, float oldMax, float newMin, float newMax) {
+	    return newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
+	}
+
+	varying vec3 vUv;
+	varying float vTime;
+	varying float vZ;
+	uniform float time;
+	void main()
+	{
+	    vUv = position;
+	    vTime = time;
+	    vec3 newPos = position;
+	    vec2 peak = vec2(1.0 - abs(.5 - uv.x), 1.0 - abs(.5 - uv.y));
+	    vec2 noise = vec2(
+	    	map(cnoise(vec2(0.3 * time + uv.x * 5., uv.y * 5.)), 0., 1., -2., (peak.x * peak.y * 30.)),
+	    	map(cnoise(vec2(-0.3 * time + uv.x * 5., uv.y * 5.)), 0., 1., -2., 25.)
+	    );
+
+	    //newPos.x += noise.x * 10.;
+	    newPos.z += noise.x * .06 * noise.y;
+	    vZ = newPos.z;
+	    vec4 mvPosition = modelViewMatrix * vec4( newPos, 1.0 );
+	    gl_PointSize = 5.0;
+	    gl_Position = projectionMatrix * mvPosition;
+	}
+	</script>
+
+	<script id="render-fs" type="x-shader/x-fragment">
+	varying vec3 vUv;
+	varying float vTime;
+	varying float vZ;
+	uniform sampler2D texture;
+
+	float map(float value, float oldMin, float oldMax, float newMin, float newMax) {
+	    return newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
+	}
+
+
+	void main()
+	{
+		vec3 colorA = vec3(.6, 0.17, 0.17);
+	    vec3 colorB = vec3(0.17, 0.8, .6); 
+	    //vec3 color = mix(colorA, colorB, vUv.x * vUv.y);
+	    float alpha = map(vZ / 2., -1. / 2., 30. / 2., 0.17, 1.); 
+	    vec3 color = vec3(1., 1., 1.);
+
+	    gl_FragColor = vec4( color, alpha);
+	    gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+	}
+	</script>
+
+    <script src="./dist/app.bundle.js"></script>
+</body>
+</html>
